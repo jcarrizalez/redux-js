@@ -58,19 +58,35 @@ redux.get('sessions', true);
 redux.all();
 ```
 
-### add event listener
+### Event listener, using hooks
 
 ```
-const unsubscribe = redux.subscribe( () => {
-  if(redux.is('sessions')){
-    console.log('is event);
+useEffect(() => {
+
+  const unsubscribe = redux.subscribe( () => {
+    if(redux.is('sessions')){
+      console.log('It is my event');
+    }
+  });
+  return () => {
+    unsubscribe();
   }
-});
+}, []);
 ```
-### remove event listener
+### Event listener, using class
 
 ```
-unsubscribe();
+componentDidMount = () => {
+  this.unsubscribe = redux.subscribe( () => {
+    if(redux.is('sessions')){
+      console.log('It is my event');
+    }
+  });
+};
+
+componentWillUnmount = () => {
+  this.unsubscribe();
+};
 ```
 
 
