@@ -1,0 +1,26 @@
+{
+  "name": "react-redux-jc",
+  "version": "1.0.0",
+  "description": "redux personalizado y minificado",
+  "main": "src/index.js",
+  "dependencies": {
+    "redux": "^4.0.5",
+    "redux-thunk": "^2.3.0"
+  },
+  "scripts": {
+    "test": "touch juan.txt"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jcarrizalez/react-redux-jc.git"
+  },
+  "keywords": [
+    "redux"
+  ],
+  "author": "Juan Carrizalez",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/jcarrizalez/react-redux-jc/issues"
+  },
+  "homepage": "https://github.com/jcarrizalez/react-redux-jc#readme"
+}
