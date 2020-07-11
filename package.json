@@ -8,7 +8,6 @@
     "redux-thunk": "^2.3.0"
   },
   "scripts": {
-    "test": "touch juan.txt"
   },
   "repository": {
     "type": "git",
@@ -18,6 +17,7 @@
     "redux"
   ],
   "author": "Juan Carrizalez",
+  "email": "sitgem@gmail.com",
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/jcarrizalez/react-redux-jc/issues"
