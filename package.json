@@ -1,14 +1,13 @@
 {
   "name": "react-redux-jc",
-  "version": "1.0.1",
+  "version": "0.0.1",
   "description": "redux personalizado y minificado",
   "main": "src/index.js",
   "dependencies": {
     "redux": "^4.0.5",
     "redux-thunk": "^2.3.0"
   },
-  "scripts": {
-  },
+  "scripts": {},
   "repository": {
     "type": "git",
     "url": "git+https://github.com/jcarrizalez/react-redux-jc.git"
