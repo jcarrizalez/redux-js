@@ -46,10 +46,15 @@ redux.push('sessions', {username:jc, data:'example'}, true);
 ```
 redux.get('sessions');
 ```
-### Query data, if it is null query the localstorage
+### Query data, if it is true query the localstorage
 
 ```
 redux.get('sessions', true);
+```
+### Remove from localstorage
+
+```
+redux.remove('sessions');
 ```
 
 ### See all data
