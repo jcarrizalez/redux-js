@@ -16,17 +16,24 @@ const subscribe = store.subscribe;
 
 const database = () => store.getState().database;
 
-const storage = (key, data, v='@rjc-') => (data)? localStorage.setItem(v+key,JSON.stringify(data) ) : JSON.parse(localStorage.getItem(v+key));
+const storage = (type, key, data, v='@rjc-') => {
+  
+  if(type==='push') localStorage.setItem(v+key,JSON.stringify(data) );
+  else if(type==='remove') localStorage.removeItem(v+key);
+  else JSON.parse(localStorage.getItem(v+key));
+}
 
-const is = (name) => (database().latest===name)? ((name==='search' && typeof database().search === 'boolean')? false : true) : false;
+const is = name => (database().latest===name)? ((name==='search' && typeof database().search === 'boolean')? false : true) : false;
+
+const remove = key => storage('remove', key);
 
 const all = () => database();
 
 const get = (key, warehouse) => {
-  
+
   if(warehouse===true){
-    const data = storage(key);
-    return (data) ? data : get(key);
+    const data = storage('get',key);
+    return data || get(key);
   }
   return database()[key];
 };
@@ -35,11 +42,11 @@ const push = (name, data, warehouse) => {
 
   store.dispatch( dispacth => { dispacth({ type:'database', database: {...database(), latest:name, [name]:data } }) });
   if(warehouse===true){
-    storage(name,data);
+    storage('push',name,data);
   } 
 };
 
 export default {
   store:(init)=> store.dispatch( dispacth => { dispacth({ type:'database', database: init }) }), 
-  is, all, get, push, subscribe
+  is, all, get, push, remove, subscribe
 };
