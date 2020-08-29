@@ -1,6 +1,6 @@
 {
   "name": "react-redux-jc",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "redux personalizado y minificado",
   "main": "src/index.js",
   "dependencies": {
