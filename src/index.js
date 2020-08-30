@@ -18,9 +18,9 @@ const database = () => store.getState().database;
 
 const storage = (type, key, data, v='@rjc-') => {
   
-  if(type==='push') localStorage.setItem(v+key,JSON.stringify(data) );
+  if(type==='push' && data!==undefined) localStorage.setItem(v+key,JSON.stringify(data) );
   else if(type==='remove') localStorage.removeItem(v+key);
-  else JSON.parse(localStorage.getItem(v+key));
+  else return JSON.parse(localStorage.getItem(v+key));
 }
 
 const is = name => (database().latest===name)? ((name==='search' && typeof database().search === 'boolean')? false : true) : false;
@@ -32,8 +32,7 @@ const all = () => database();
 const get = (key, warehouse) => {
 
   if(warehouse===true){
-    const data = storage('get',key);
-    return data || get(key);
+    return storage('get',key) || get(key);
   }
   return database()[key];
 };
