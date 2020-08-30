@@ -20,7 +20,6 @@ redux.store({
   environment:env,
   storage_cache:[],
   requests_executed:[],
-  prices:{data:[]},
   path:'',
   sessions:{},
   authorize:{},
