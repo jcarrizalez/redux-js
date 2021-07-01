@@ -1,16 +1,16 @@
 ## Getting started
 
 ```
-npm install react-redux-jc;
+npm install redux-js;
 ```
 or
 ```
-yarn add react-redux-jc
+yarn add redux-js;
 ```
 
 ### Usage
 ```
-import redux from "react-redux-jc";
+import redux from redux-js";
 ```
 Add your initial storage in the index of your project
 
@@ -68,7 +68,15 @@ redux.all();
 useEffect(() => {
 
   const unsubscribe = redux.subscribe( () => {
+    //Use 'is' or 'current'
+    
+    //Using is return boolean
     if(redux.is('sessions')){
+      console.log('It is my event');
+    }
+    
+    //Using current return string
+    if(redux.current()==='sessions'){
       console.log('It is my event');
     }
   });
@@ -82,7 +90,15 @@ useEffect(() => {
 ```
 componentDidMount = () => {
   this.unsubscribe = redux.subscribe( () => {
+    //Use 'is' or 'current'
+    
+    //Using is return boolean
     if(redux.is('sessions')){
+      console.log('It is my event');
+    }
+    
+    //Using current return string
+    if(redux.current()==='sessions'){
       console.log('It is my event');
     }
   });
