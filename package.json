@@ -1,5 +1,5 @@
 {
-  "name": "react-redux-jc",
+  "name": "redux-js",
   "version": "1.0.2",
   "description": "redux personalizado y minificado",
   "main": "src/index.js",
@@ -11,7 +11,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/jcarrizalez/react-redux-jc.git"
+    "url": "git+https://github.com/jcarrizalez/redux-js.git"
   },
   "keywords": [
     "redux"
@@ -20,7 +20,7 @@
   "email": "sitgem@gmail.com",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/jcarrizalez/react-redux-jc/issues"
+    "url": "https://github.com/jcarrizalez/redux-js/issues"
   },
-  "homepage": "https://github.com/jcarrizalez/react-redux-jc#readme"
+  "homepage": "https://github.com/jcarrizalez/redux-js#readme"
 }
