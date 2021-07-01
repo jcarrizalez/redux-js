@@ -25,6 +25,8 @@ const storage = (type, key, data, v='@rjc-') => {
 
 const is = name => (database().latest===name)? ((name==='search' && typeof database().search === 'boolean')? false : true) : false;
 
+const current = () => database().latest;
+
 const remove = key => storage('remove', key);
 
 const all = () => database();
@@ -47,5 +49,5 @@ const push = (name, data, warehouse) => {
 
 export default {
   store:(init)=> store.dispatch( dispacth => { dispacth({ type:'database', database: init }) }), 
-  is, all, get, push, remove, subscribe
+  is, current, all, get, push, remove, subscribe
 };
