@@ -2,10 +2,9 @@ import { createStore, applyMiddleware, combineReducers, compose } from 'redux';
 import thunk from 'redux-thunk';
 
 const enhancers = [
-  applyMiddleware([
+  applyMiddleware(
     store => next => action => next(action), 
     thunk
-    ]
   )
 ];
 
