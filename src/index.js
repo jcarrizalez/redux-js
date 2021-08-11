@@ -1,9 +1,12 @@
 import { createStore, applyMiddleware, combineReducers, compose } from 'redux';
 import thunk from 'redux-thunk';
 
-const middlewares = [store => next => action => next(action), thunk];
 const enhancers = [
-  applyMiddleware(...middlewares)
+  applyMiddleware([
+    store => next => action => next(action), 
+    thunk
+    ]
+  )
 ];
 
 if (process.env.NODE_ENV === 'development') {
