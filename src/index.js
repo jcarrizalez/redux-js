@@ -1,6 +1,8 @@
 import { createStore, applyMiddleware, combineReducers, compose } from 'redux';
 import thunk from 'redux-thunk';
 
+const development = (process.env.NODE_ENV === 'development')? true : false;
+
 const enhancers = [
   applyMiddleware(
     store => next => action => next(action), 
@@ -8,25 +10,93 @@ const enhancers = [
   )
 ];
 
-if (process.env.NODE_ENV === 'development') {
-  const devToolsExtension = window.__REDUX_DEVTOOLS_EXTENSION__
+if (development) {
+  enhancers.push(window.__REDUX_DEVTOOLS_EXTENSION__
     ? window.__REDUX_DEVTOOLS_EXTENSION__({
-      serialize: true
+      trace: true,
+      serialize: true,
+      actionsBlacklist: ['@@JC']
     })
-    : f => f;
-  enhancers.push(devToolsExtension);
+    : f => f
+  );
+}
+
+const createReducers = (data=undefined, new_key=false, reducers = {}) => {
+
+  if(data === undefined){
+    return combineReducers({
+      '@@JC': (state = {}, action) => (action.type === '@@JC') ? action['@@JC'] : state
+    });
+  }
+
+  if(new_key!==false){
+    reducers['@@INIT-RELOAD-BY:'+new_key] = (state = data[new_key], action) => (action.type === '@@INIT-RELOAD-BY:'+new_key) ? action['@@INIT-RELOAD-BY:'+new_key] : state
+  }
+
+  Object.keys(data).forEach( name => {
+
+    var init_state = data[name];
+
+    if(init_state === undefined){
+      if(development) {
+        init_state = null;
+        console.warn('redux-js reducer property "'+name+'" cannot be "undefined", by default it is set to "null"');
+      }
+    }
+    reducers[name] = (state = init_state, action) => (action.type === name) ? action[name] : state
+  });
+
+  return combineReducers(reducers);
 }
 
 const store = createStore(
-  combineReducers({
-    database: (state = {}, action) => (action.type === "database") ? action.database : state
-  }),
+  createReducers(),
   compose(...enhancers)
 );
 
-const subscribe = store.subscribe;
+store['@@CTRJC'] = [];
 
-const database = () => store.getState().database;
+store.latest = null;
+
+const getState = () => store.getState();
+
+const dispatch = (name, data) => {
+
+  //asigno el actual y va antes del dispacth para que este disponible en el update
+  store.latest = name;
+  //Luego del latest
+  store.dispatch(dispacth => { dispacth({ type: name, [name]: data }) });
+}
+
+store.injectStore = (data, new_key=false) => {
+
+  Object.keys(data).forEach((name) => {
+
+    //agrego al control interno de propiedades existentes
+    if(store['@@CTRJC'].indexOf(name) === -1){
+      store['@@CTRJC'].push(name);
+      if(new_key === name){
+        store.dispatch(dispacth => { dispacth({ type: '@@INIT-RELOAD-BY:'+name, ['@@INIT-RELOAD-BY:'+name]: 'you must add "'+name+'" in redux.store()' }) });
+      }
+    }
+
+    var value = data[name];
+    
+    if(value === undefined){
+      value = null;
+    }
+    //si el valor es igual no ejecuto el dispatch
+    if(JSON.stringify(value) !== JSON.stringify(getState()[name])){
+      dispatch(name, value);
+    }
+  });
+}
+
+const loadStore = (data, new_key=false) => {
+  //remplazo del estado actual
+  store.replaceReducer( createReducers(data, new_key) );
+  store.injectStore(data, new_key);
+}
 
 const storage = (type, key, data, v = '@rjc-') => {
 
@@ -35,31 +105,37 @@ const storage = (type, key, data, v = '@rjc-') => {
   else return JSON.parse(localStorage.getItem(v + key));
 }
 
-const is = name => (database().latest === name) ? ((name === 'search' && typeof database().search === 'boolean') ? false : true) : false;
-
-const current = () => database().latest;
-
-const remove = key => storage('remove', key);
-
-const all = () => database();
-
 const get = (key, warehouse) => {
 
   if (warehouse === true) {
     return storage('get', key) || get(key);
   }
-  return database()[key];
+  return getState()[key];
 };
 
 const push = (name, data, warehouse) => {
 
-  store.dispatch(dispacth => { dispacth({ type: 'database', database: { ...database(), latest: name, [name]: data } }) });
+  //Valido existencia de registro 
+  if(store['@@CTRJC'].indexOf(name) === -1){
+    if (development) {
+      console.warn('redux-js reload reducers by property: "'+name+'", must add '+name+" to redux.store(), if not added, more memory is used for reloading");
+    }
+    loadStore({...getState(),[name]:data}, name);
+  }
+ 
+  dispatch(name, data);
+  //si es data que va al localstore, escribo registro
   if (warehouse === true) {
     storage('push', name, data);
   }
 };
 
 export default {
-  store: (init) => store.dispatch(dispacth => { dispacth({ type: 'database', database: init }) }),
-  is, current, all, get, push, remove, subscribe
+  store: init => loadStore(init),
+  subscribe: closure => store.subscribe(closure),
+  is: name => (store.latest === name) ? true : false,
+  all: () => getState(),
+  current: () => store.latest, 
+  remove: key => storage('remove', key), //remove from localstore
+  get, push,
 };
