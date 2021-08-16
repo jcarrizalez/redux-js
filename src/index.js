@@ -1,6 +1,10 @@
 import { createStore, applyMiddleware, combineReducers, compose } from 'redux';
 import thunk from 'redux-thunk';
 
+const crtl = '@@CTRJC';
+
+const reload = '@@INIT-RELOAD-BY:';
+
 const development = (process.env.NODE_ENV === 'development')? true : false;
 
 const enhancers = [
@@ -15,7 +19,7 @@ if (development) {
     ? window.__REDUX_DEVTOOLS_EXTENSION__({
       trace: true,
       serialize: true,
-      actionsBlacklist: ['@@JC']
+      actionsBlacklist: [crtl]
     })
     : f => f
   );
@@ -25,12 +29,12 @@ const createReducers = (data=undefined, new_key=false, reducers = {}) => {
 
   if(data === undefined){
     return combineReducers({
-      '@@JC': (state = {}, action) => (action.type === '@@JC') ? action['@@JC'] : state
+      [crtl]: (state = [], action) => (action.type === crtl) ? action[crtl] : state
     });
   }
 
   if(new_key!==false){
-    reducers['@@INIT-RELOAD-BY:'+new_key] = (state = data[new_key], action) => (action.type === '@@INIT-RELOAD-BY:'+new_key) ? action['@@INIT-RELOAD-BY:'+new_key] : state
+    reducers[reload+new_key] = (state = data[new_key], action) => (action.type === reload+new_key) ? action[reload+new_key] : state
   }
 
   Object.keys(data).forEach( name => {
@@ -54,7 +58,7 @@ const store = createStore(
   compose(...enhancers)
 );
 
-store['@@CTRJC'] = [];
+store[crtl] = [];
 
 store.latest = null;
 
@@ -73,10 +77,10 @@ store.injectStore = (data, new_key=false) => {
   Object.keys(data).forEach((name) => {
 
     //agrego al control interno de propiedades existentes
-    if(store['@@CTRJC'].indexOf(name) === -1){
-      store['@@CTRJC'].push(name);
+    if(store[crtl].indexOf(name) === -1){
+      store[crtl].push(name);
       if(new_key === name){
-        store.dispatch(dispacth => { dispacth({ type: '@@INIT-RELOAD-BY:'+name, ['@@INIT-RELOAD-BY:'+name]: 'you must add "'+name+'" in redux.store()' }) });
+        store.dispatch(dispacth => { dispacth({ type: reload+name, [reload+name]: 'you must add "'+name+'" in redux.store()' }) });
       }
     }
 
@@ -116,7 +120,7 @@ const get = (key, warehouse) => {
 const push = (name, data, warehouse) => {
 
   //Valido existencia de registro 
-  if(store['@@CTRJC'].indexOf(name) === -1){
+  if(store[crtl].indexOf(name) === -1){
     if (development) {
       console.warn('redux-js reload reducers by property: "'+name+'", must add '+name+" to redux.store(), if not added, more memory is used for reloading");
     }
