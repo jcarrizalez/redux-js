@@ -73,8 +73,19 @@ redux.remove('sessions');
 redux.all();
 ```
 
-## Event listener, using hooks
+## Event listener, using hooks (IN THE NEXT VERSION)
+```
+useEffect(() => {
 
+  const unsubscribe = redux.subscribe('session', value => {
+    console.log('session', value)
+  });
+
+  return () => unsubscribe();
+});
+```
+
+## Event listener, using hooks
 ```
 useEffect(() => {
 
