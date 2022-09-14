@@ -21,12 +21,12 @@ Add your initial storage in the index of your project
 ## Initial state version deprecated
 This option is only in this version in case you want to continue using 'database' as action and reducer unique for the whole store,for the next version this option will no longer be available.
 
-```
+```jsx
 redux.deprecated();
 ```
 
 ## Initial state settings, example
-```
+```jsx
 redux.store({
   environment:env,
   storage_cache:[],
@@ -42,51 +42,62 @@ redux.store({
 
 ## Insert data
 
-```
+```jsx
 redux.push('sessions', {username:jc, data:'example'});
 ```
 ## Insert data and store in localstorage 
 
-```
+```jsx
 redux.push('sessions', {username:jc, data:'example'}, true);
 ```
 
 ## Query data
 
-```
+```jsx
 redux.get('sessions');
 ```
 ## Query data, if it is true query the localstorage
 
-```
+```jsx
 redux.get('sessions', true);
 ```
 ## Remove from localstorage
 
-```
+```jsx
 redux.remove('sessions');
 ```
 
 ## See all data
 
-```
+```jsx
 redux.all();
 ```
 
 ## Event listener, using hooks (IN THE NEXT VERSION)
-```
+```jsx
+// single
 useEffect(() => {
 
   const unsubscribe = redux.subscribe('session', value => {
-    console.log('session', value)
+    console.log('It is my event session', value);
   });
-
   return () => unsubscribe();
 });
+
+// all
+useEffect(() => {
+
+  const unsubscribe = redux.subscribe( (value, key) => {
+    if(key==='sessions'){
+        console.log('It is my event session', value);
+    }
+  });
+  return unsubscribe();
+}, []);
 ```
 
 ## Event listener, using hooks
-```
+```jsx
 useEffect(() => {
 
   const unsubscribe = redux.subscribe( () => {
@@ -109,7 +120,7 @@ useEffect(() => {
 ```
 ## Event listener, using class
 
-```
+```jsx
 componentDidMount = () => {
   this.unsubscribe = redux.subscribe( () => {
     //Use 'is' or 'current'
