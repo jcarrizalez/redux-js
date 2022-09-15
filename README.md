@@ -14,7 +14,7 @@ yarn add redux-js;
 
 ## Usage
 ```jsx
-import redux from redux-js";
+import redux from 'redux-js';
 ```
 
 ## Initial state settings, example
