@@ -1,25 +1,11 @@
 import { createStore, applyMiddleware, combineReducers, compose } from 'redux';
 import thunk from 'redux-thunk';
 
-//INI remove next version
-var deprecated = false;
-
-const isDeprecated = () => deprecated;
-
-const _deprecated = () => {
-  
-  if(development === true){
-    console.warn('You are using the deprecated version of redux-js, this version handles a single action and a single reducer, but that is how we manage until version v1.0.5');
-    deprecated = true;
-  }
-}
-//FIN remove next version
-
 const crtl = '@@CTRJC';
 
 const reload = '@@INIT-RELOAD-BY:';
 
-const development = (process.env.NODE_ENV === 'development')? true : false;
+const development = (process.env.NODE_ENV === 'development') ? true : false;
 
 const enhancers = [
   applyMiddleware(
@@ -40,14 +26,6 @@ if (development) {
 }
 
 const createReducers = (data=undefined, new_key=false, reducers = {}) => {
-
-  //INI remove next version
-  if(isDeprecated() === true){
-    return combineReducers({
-      database: (state = {}, action) => (action.type === "database") ? action.database : state
-    });
-  }
-  //FIN remove next version
 
   if(data === undefined){
     return combineReducers({
@@ -84,14 +62,7 @@ store[crtl] = [];
 
 store.latest = null;
 
-const getState = () => {
-  //INI remove next version
-  if(isDeprecated() === true){
-    return store.getState().database;
-  }
-  //FIN remove next version
-  return store.getState();
-}
+const getState = () => store.getState();
 
 const dispatch = (name, data) => {
 
@@ -102,12 +73,6 @@ const dispatch = (name, data) => {
 }
 
 store.injectStore = (data, new_key=false) => {
-
-  //INI remove next version
-  if(isDeprecated() === true){
-    return store.dispatch(dispacth => { dispacth({ type: 'database', database: data }) });
-  }
-  //FIN remove next version
 
   Object.keys(data).forEach((name) => {
 
@@ -152,18 +117,7 @@ const get = (key, warehouse) => {
   return getState()[key];
 };
 
-
 const push = (name, data, warehouse) => {
-
-  //INI remove next version
-  if(isDeprecated() === true){
-    store.dispatch(dispacth => { dispacth({ type: 'database', database: { ...getState(), latest: name, [name]: data } }) });
-    if (warehouse === true) {
-      storage('push', name, data);
-    }
-    return null;
-  }
-  //FIN remove next version
 
   //Valido existencia de registro 
   if(store[crtl].indexOf(name) === -1){
@@ -180,20 +134,32 @@ const push = (name, data, warehouse) => {
   }
 };
 
+const subscribe = (closure1, closure2) => {
+  
+  if(closure1 === undefined && closure2 === undefined){
+    return store.subscribe();
+  }
+
+  if(typeof closure1 === 'function' && closure2 === undefined){
+    return store.subscribe( () => closure1(store.getState()[store.latest], store.latest)  );
+  }
+
+  let key = closure1;
+  let fnc = closure2;
+
+  if(typeof closure1 === 'function'){
+    key = closure2;
+    fnc = closure1;
+  }
+
+  return store.subscribe( () => (store.latest === key) ? fnc(store.getState()[key]) : undefined);
+}
+
 export default {
-  deprecated: () => _deprecated(),
   store: init => loadStore(init),
-  subscribe: closure => store.subscribe(closure),
-  is: name => {
-    //INI remove next version
-    if(isDeprecated() === true){
-      return (getState().latest === name) ? ((name === 'search' && typeof getState().search === 'boolean') ? false : true) : false;
-    }
-    //FIN remove next version
-    return (store.latest === name) ? true : false
-  },
+  is: name => (store.latest === name) ? true : false,
   all: () => getState(),
   current: () => store.latest, 
   remove: key => storage('remove', key), //remove from localstore
-  get, push,
+  get, push, subscribe,
 };
