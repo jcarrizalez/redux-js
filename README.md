@@ -1,6 +1,4 @@
-<p align="center">
-<img src="https://assets.cdnar.net/assets/public/qubit/app/_redux-js.jpg">
-</p>
+![redux-js](https://github.com/jcarrizalez/redux-js/assets/8440072/03743174-1560-4e12-b8ec-f22ebdb37510)
 
 ## Getting started
 
@@ -160,6 +158,4 @@ componentWillUnmount = () => {
 ```
 
 ## Animation Example
-<span align="center">
-   <img src="https://assets.cdnar.net/assets/public/qubit/app/redux-js-example1.gif" width="500" height="300">
-</span>
+![redux-js-example1](https://github.com/jcarrizalez/redux-js/assets/8440072/544b7342-ab57-49aa-8503-f1f9b687fa5f)
