@@ -11,16 +11,8 @@ yarn add redux-js;
 ```
 
 ## Usage
-```
-import redux from redux-js";
-```
-Add your initial storage in the index of your project
-
-## Initial state version deprecated
-This option is only in this version in case you want to continue using 'database' as action and reducer unique for the whole store,for the next version this option will no longer be available.
-
 ```jsx
-redux.deprecated();
+import redux from 'redux-js';
 ```
 
 ## Initial state settings, example
@@ -71,35 +63,33 @@ redux.remove('sessions');
 redux.all();
 ```
 
-## Event listener, using hooks (IN THE NEXT VERSION)
+## Event listener, using hooks by key
 ```jsx
-// single
 useEffect(() => {
 
   const unsubscribe = redux.subscribe('session', value => {
-    console.log('It is my event session', value);
+    console.log('It is my event sessions', value);
   });
   return () => unsubscribe();
 });
-
-// all
+```
+## Event listener, using hooks by (value, key) 
+```jsx
 useEffect(() => {
 
   const unsubscribe = redux.subscribe( (value, key) => {
-    if(key==='sessions'){
-        console.log('It is my event session', value);
+    if(key === 'sessions'){
+        console.log('It is my event sessions', value);
     }
   });
   return unsubscribe();
 }, []);
 ```
-
-## Event listener, using hooks
+## Event listener, using hooks (old versions: Use 'is' or 'current') 
 ```jsx
 useEffect(() => {
 
   const unsubscribe = redux.subscribe( () => {
-    //Use 'is' or 'current'
     
     //Using is return boolean
     if(redux.is('sessions')){
@@ -116,7 +106,7 @@ useEffect(() => {
   }
 }, []);
 ```
-## Event listener, using class
+## Event listener, using class: (value and key are allowed, example hooks)
 
 ```jsx
 componentDidMount = () => {
